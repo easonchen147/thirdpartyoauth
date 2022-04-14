@@ -1,4 +1,4 @@
-module thirdpartoauth
+module github.com/easonchen147/thirdpartoauth
 
 go 1.18
 
