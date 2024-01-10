@@ -4,7 +4,9 @@ import (
 	"context"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/sha1"
 	"encoding/base64"
+	"encoding/hex"
 	"github.com/go-resty/resty/v2"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 	"time"
@@ -58,6 +60,12 @@ const (
 	wxMiniOauthAccessTokenUrl = "https://resp.weixin.qq.com/cgi-bin/token"
 	wxMiniOauthCode2TokenUrl  = "https://resp.weixin.qq.com/sns/jscode2session"
 	wxMiniOauthGetPhoneUrl    = "https://resp.weixin.qq.com/wxa/business/getuserphonenumber"
+)
+
+// 微信公众号分享
+const (
+	wxCgiBinAccessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token"
+	wxCgiBinJsApiTicketUrl = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi"
 )
 
 // qq授权
@@ -202,4 +210,22 @@ func httpPost(ctx context.Context, url string, data interface{}, result interfac
 func httpGet(ctx context.Context, url string, result interface{}) error {
 	_, err := httpClient.R().SetResult(&result).Get(url)
 	return err
+}
+
+const (
+	NanoIdAlphbet  = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	NonceStrLength = 15
+)
+
+// GetNonceStr 获取随机字符串
+func GetNonceStr(length int) string {
+	result, _ := gonanoid.Generate(NanoIdAlphbet, length)
+	return result
+}
+
+// GetSha1 SHA1加密
+func GetSha1(data string) string {
+	r := sha1.Sum([]byte(data))
+	result := hex.EncodeToString(r[:])
+	return result
 }
