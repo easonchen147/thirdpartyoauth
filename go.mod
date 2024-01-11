@@ -1,6 +1,6 @@
 module github.com/easonchen147/thirdpartyoauth
 
-go 1.18
+go 1.20
 
 require (
 	github.com/go-resty/resty/v2 v2.7.0
